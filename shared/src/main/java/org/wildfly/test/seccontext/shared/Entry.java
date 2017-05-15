@@ -1,19 +1,17 @@
 package org.wildfly.test.seccontext.shared;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
 /**
  * Interface for the bean used as the entry point to verify EJB3 security behaviour.
  */
-@Local
 @Remote
 public interface Entry {
 
     /**
      * @return The name of the Principal obtained from a call to EJBContext.getCallerPrincipal()
      */
-    String whoAmI();
+    String whoAmI() throws Exception;
 
     /**
      * Obtains the name of the Principal obtained from a call to EJBContext.getCallerPrincipal()
@@ -22,7 +20,7 @@ public interface Entry {
      * @return An array containing the name from the local call first followed by the name from
      * the second call.
      */
-    String[] doubleWhoAmI();
+    String[] doubleWhoAmI() throws Exception;
 
     /**
      * As doubleWhoAmI except the user is switched before the second call.
@@ -41,7 +39,7 @@ public interface Entry {
      * @param roleName - The role to check.
      * @return the response from EJBContext.isCallerInRole() with the supplied role name.
      */
-    boolean doIHaveRole(String roleName);
+    boolean doIHaveRole(String roleName) throws Exception;
 
     /**
      * Calls EJBContext.isCallerInRole() with the supplied role name and then calls a second bean
@@ -51,7 +49,7 @@ public interface Entry {
      * @return the values from the isCallerInRole() calls, the EntryBean is first and the second bean
      * second.
      */
-    boolean[] doubleDoIHaveRole(String roleName);
+    boolean[] doubleDoIHaveRole(String roleName) throws Exception;
 
     /**
      * As doubleDoIHaveRole except the user is switched before the second call.

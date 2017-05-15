@@ -1,21 +1,24 @@
 package org.wildfly.test.seccontext.entry;
 
+import static org.wildfly.test.seccontext.shared.IdentityUtils.switchIdentity;
+
 import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.naming.NamingException;
 
-import org.wildfly.security.auth.client.AuthenticationConfiguration;
-import org.wildfly.security.auth.client.AuthenticationContext;
-import org.wildfly.security.auth.client.MatchRule;
-import org.wildfly.security.auth.server.RealmUnavailableException;
-import org.wildfly.security.auth.server.SecurityDomain;
-import org.wildfly.security.evidence.PasswordGuessEvidence;
 import org.wildfly.test.seccontext.shared.Entry;
 import org.wildfly.test.seccontext.shared.LookupUtil;
 import org.wildfly.test.seccontext.shared.ReAuthnType;
 import org.wildfly.test.seccontext.shared.WhoAmI;
 
+@Stateless
+@RolesAllowed("entry")
+@DeclareRoles({ "entry", "whoami", "servlet" })
 public class EntryBean implements Entry {
 
     public static final String BEAN_REMOTE_NAME = System.getProperty("seccontext.whoami.name",
@@ -26,11 +29,11 @@ public class EntryBean implements Entry {
     @Resource
     private SessionContext context;
 
-    public String whoAmI() {
+    public String whoAmI() throws Exception {
         return context.getCallerPrincipal().getName();
     }
 
-    public String[] doubleWhoAmI() {
+    public String[] doubleWhoAmI() throws Exception {
         return doubleWhoAmI(null, null, ReAuthnType.NO_REAUTHN);
     }
 
@@ -52,11 +55,11 @@ public class EntryBean implements Entry {
         }
     }
 
-    public boolean doIHaveRole(String roleName) {
+    public boolean doIHaveRole(String roleName) throws Exception {
         return context.isCallerInRole(roleName);
     }
 
-    public boolean[] doubleDoIHaveRole(String roleName) {
+    public boolean[] doubleDoIHaveRole(String roleName) throws Exception {
         return doubleDoIHaveRole(roleName, null, null, ReAuthnType.NO_REAUTHN);
     }
 
@@ -77,26 +80,8 @@ public class EntryBean implements Entry {
         }
     }
 
-    private WhoAmI getWhoAmIBean() {
+    private WhoAmI getWhoAmIBean() throws NamingException {
         return LookupUtil.lookup(BEAN_REMOTE_NAME, null);
-    }
-    
-    private static <T> T switchIdentity(final String username, final String password, final Callable<T> callable,
-            ReAuthnType type) throws RealmUnavailableException, Exception {
-        switch (type) {
-            case AUTHENTICATION_CONTEXT:
-                return AuthenticationContext.empty()
-                        .with(MatchRule.ALL, AuthenticationConfiguration.EMPTY.useName(username).usePassword(password))
-                        .runCallable(callable);
-            // TODO authContext = AuthenticationContext.empty().with(MatchRule.ALL,
-            // AuthenticationConfiguration.EMPTY.useForwardedIdentity(domain));
-            case SECURITY_DOMAIN_AUTHENTICATE:
-                return SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
-                        .runAs(callable);
-            case NO_REAUTHN:
-            default:
-                return callable.call();
-        }
     }
 
 }

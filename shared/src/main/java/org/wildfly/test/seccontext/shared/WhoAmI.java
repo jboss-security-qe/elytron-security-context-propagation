@@ -2,10 +2,8 @@ package org.wildfly.test.seccontext.shared;
 
 import java.security.Principal;
 
-import javax.ejb.Local;
 import javax.ejb.Remote;
 
-@Local
 @Remote
 public interface WhoAmI {
 

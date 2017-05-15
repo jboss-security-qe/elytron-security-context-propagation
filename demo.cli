@@ -1,0 +1,60 @@
+embed-server --admin-only=true
+
+# enable Elytron across the server
+/subsystem=undertow/server=default-server/https-listener=https:remove()
+/subsystem=undertow/application-security-domain=other:add(http-authentication-factory=application-http-authentication)
+/subsystem=ejb3/application-security-domain=other:add(security-domain=ApplicationDomain)
+/subsystem=batch-jberet:write-attribute(name=security-domain, value=ApplicationDomain)
+/subsystem=remoting/http-connector=http-remoting-connector:write-attribute(name=sasl-authentication-factory, \
+    value=application-sasl-authentication)
+/subsystem=remoting/http-connector=http-remoting-connector:undefine-attribute(name=security-realm)
+/core-service=management/access=identity:add(security-domain=ManagementDomain)
+/core-service=management/management-interface=http-interface:write-attribute(name=http-upgrade, \
+    value={enabled=true, sasl-authentication-factory=management-sasl-authentication})
+/core-service=management/management-interface=http-interface:write-attribute(name=http-authentication-factory, \
+    value=management-http-authentication)
+/core-service=management/management-interface=http-interface:undefine-attribute(name=security-realm)
+
+/core-service=management/security-realm=ManagementRealm:remove
+/core-service=management/security-realm=ApplicationRealm:remove
+
+/subsystem=elytron/configurable-sasl-server-factory=seccontext-sasl-server-factory:add(sasl-server-factory=elytron, \
+    filters=[{pattern-filter="PLAIN"}])
+/subsystem=elytron/sasl-authentication-factory=seccontext-sasl-authn-factory:add( \
+    sasl-server-factory=seccontext-sasl-server-factory, \
+    security-domain=SeccontextDomain, \
+    mechanism-configurations=[{mechanism-name=PLAIN}])
+/socket-binding-group=standard-sockets/socket-binding=seccontext-remoting-socket:add(port=16444)
+/subsystem=remoting/connector=seccontext-connector:add(socket-binding=seccontext-remoting-socket, \
+    sasl-authentication-factory=seccontext-sasl-authn-factory)
+
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm:add(path=seccontext-users,relative-to=jboss.server.config.dir)
+
+/subsystem=elytron/security-domain=SeccontextDomain:add(realms=[ \
+    {realm=SeccontextFsRealm,role-decoder=groups-to-roles}], \
+    default-realm=SeccontextFsRealm, \
+    permission-mapper=default-permission-mapper)
+
+/subsystem=ejb3/application-security-domain=seccontext-entry:add(security-domain=SeccontextDomain)
+/subsystem=ejb3/application-security-domain=seccontext-whoami:add(security-domain=SeccontextDomain)
+
+/subsystem=elytron/http-authentication-factory=seccontext:add(security-domain=SeccontextDomain, \ 
+    http-server-mechanism-factory=global, \
+    mechanism-configurations=[{mechanism-name=BASIC}])
+
+/subsystem=undertow/application-security-domain=seccontext-web:add(http-authentication-factory=seccontext)
+
+# add test users
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=servlet:add()
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=servlet:set-password(clear={password="servlet"})
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=servlet:add-attribute(name=groups, value=["servlet"])
+
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=entry:add()
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=entry:set-password(clear={password="entry"})
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=entry:add-attribute(name=groups, value=["entry"])
+
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=whoami:add()
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=whoami:set-password(clear={password="whoami"})
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm/identity=whoami:add-attribute(name=groups, value=["whoami"])
+
+stop-embedded-server

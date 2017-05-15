@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss:ejb-jar xmlns:jboss="http://www.jboss.com/xml/ns/javaee" xmlns:jee="http://java.sun.com/xml/ns/javaee"
+	xmlns:s="urn:security">
+	<jee:assembly-descriptor>
+		<s:security>
+			<jee:ejb-name>*</jee:ejb-name>
+			<s:security-domain>seccontext-whoami</s:security-domain>
+		</s:security>
+	</jee:assembly-descriptor>
+</jboss:ejb-jar>
