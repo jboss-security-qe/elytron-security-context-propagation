@@ -13,12 +13,15 @@ public class IdentityUtils {
     public static <T> T switchIdentity(final String username, final String password, final Callable<T> callable,
             ReAuthnType type) throws Exception {
         switch (type) {
+            case FORWARDED_IDENTITY:
+                return AuthenticationContext.empty()
+                        .with(MatchRule.ALL,
+                                AuthenticationConfiguration.empty().useForwardedIdentity(SecurityDomain.getCurrent()))
+                        .runCallable(callable);
             case AUTHENTICATION_CONTEXT:
                 return AuthenticationContext.empty()
-                        .with(MatchRule.ALL, AuthenticationConfiguration.EMPTY.useName(username).usePassword(password))
+                        .with(MatchRule.ALL, AuthenticationConfiguration.empty().useName(username).usePassword(password))
                         .runCallable(callable);
-            // TODO authContext = AuthenticationContext.empty().with(MatchRule.ALL,
-            // AuthenticationConfiguration.EMPTY.useForwardedIdentity(domain));
             case SECURITY_DOMAIN_AUTHENTICATE:
                 return SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
                         .runAs(callable);

@@ -11,6 +11,7 @@ import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.naming.NamingException;
 
+import org.wildfly.test.seccontext.shared.Constants;
 import org.wildfly.test.seccontext.shared.Entry;
 import org.wildfly.test.seccontext.shared.LookupUtil;
 import org.wildfly.test.seccontext.shared.ReAuthnType;
@@ -21,10 +22,8 @@ import org.wildfly.test.seccontext.shared.WhoAmI;
 @DeclareRoles({ "entry", "whoami", "servlet" })
 public class EntryBean implements Entry {
 
-    public static final String BEAN_REMOTE_NAME = System.getProperty("seccontext.whoami.name",
+    public static final String BEAN_REMOTE_NAME = System.getProperty(Constants.PROP_BEAN_LOOKUP_WHOAMI,
             LookupUtil.getRemoteEjbName("seccontext-whoami", "WhoAmIBean", WhoAmI.class.getName()));
-    // @EJB()
-    // private WhoAmI whoAmIBean;
 
     @Resource
     private SessionContext context;
