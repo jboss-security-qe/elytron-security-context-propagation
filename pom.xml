@@ -37,6 +37,7 @@
                 <scope>import</scope>
             </dependency>
  -->
+             
             <dependency>
                 <groupId>org.wildfly.security</groupId>
                 <artifactId>wildfly-elytron</artifactId>
@@ -63,6 +64,7 @@
                 <groupId>org.wildfly</groupId>
                 <artifactId>wildfly-ejb-client-bom</artifactId>
                 <version>${version.org.wildfly}</version>
+                <scope>import</scope>
                 <type>pom</type>
             </dependency>
             

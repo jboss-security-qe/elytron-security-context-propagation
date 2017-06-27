@@ -1,6 +1,6 @@
 # elytron-security-context-propagation
-Playground for security context propagation testing in Elytron
 
+Playground for security context propagation testing in Elytron
 
 ```
 export JBOSS_HOME=...
@@ -13,4 +13,6 @@ mvn clean install \
 
 $JBOSS_HOME/bin/standalone.sh -c standalone.xml -Djboss.server.base.dir=$JBOSS_HOME/standalone1 -Djboss.node.name=host1 -Dseccontext.provider.url=remote+http://127.0.0.1:8280
 $JBOSS_HOME/bin/standalone.sh -c standalone.xml -Djboss.server.base.dir=$JBOSS_HOME/standalone2 -Djboss.node.name=host2 -Djboss.socket.binding.port-offset=200
+
+mvn exec:java -f ejb-client
 ```
