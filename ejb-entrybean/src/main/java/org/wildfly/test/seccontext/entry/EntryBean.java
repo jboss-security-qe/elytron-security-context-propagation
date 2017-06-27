@@ -2,6 +2,8 @@ package org.wildfly.test.seccontext.entry;
 
 import static org.wildfly.test.seccontext.shared.IdentityUtils.switchIdentity;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
@@ -32,26 +34,31 @@ public class EntryBean implements Entry {
         return context.getCallerPrincipal().getName();
     }
 
-    public String[] doubleWhoAmI() throws Exception {
+    public String[] doubleWhoAmI() {
         return doubleWhoAmI(null, null, ReAuthnType.NO_REAUTHN);
     }
 
-    public String[] doubleWhoAmI(String username, String password, ReAuthnType type) throws Exception {
-        String localWho = context.getCallerPrincipal().getName();
+    public String[] doubleWhoAmI(String username, String password, ReAuthnType type) {
+        String[] result = new String[2];
+        result[0] = context.getCallerPrincipal().getName();
 
-        final Callable<String[]> callable = () -> {
-            String remoteWho = getWhoAmIBean().getCallerPrincipal().getName();
-            return new String[] { localWho, remoteWho };
+        final Callable<String> callable = () -> {
+            return getWhoAmIBean().getCallerPrincipal().getName();
         };
         try {
-            return switchIdentity(username, password, callable, type);
+            result[1] = switchIdentity(username, password, callable, type);
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            result[1] = sw.toString();
         } finally {
             String secondLocalWho = context.getCallerPrincipal().getName();
-            if (secondLocalWho.equals(localWho) == false) {
+            if (! secondLocalWho.equals(result[0])) {
                 throw new IllegalStateException(
-                        "Local getCallerPrincipal changed from '" + localWho + "' to '" + secondLocalWho);
+                        "Local getCallerPrincipal changed from '" + result[0] + "' to '" + secondLocalWho);
             }
         }
+        return result;
     }
 
     public boolean doIHaveRole(String roleName) throws Exception {

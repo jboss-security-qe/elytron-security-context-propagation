@@ -27,9 +27,9 @@ public class LookupUtil {
     @SuppressWarnings("unchecked")
     public static <T> T lookup(String name, Map<?, ?> propertyOverrides) throws NamingException {
         final Properties jndiProperties = new Properties();
-        jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, "org.wildfly.naming.client.WildFlyInitialContextFactory");
+        jndiProperties.put(Context.INITIAL_CONTEXT_FACTORY, Constants.INITIAL_CTX_FACTORY);
         jndiProperties.put(Context.PROVIDER_URL,
-                System.getProperty("test.seccontext.provider.url", "remote://127.0.0.1:16444"));
+                System.getProperty(Constants.PROP_PROP_PROVIDER_URL, "remote+http://127.0.0.1:8080"));
         if (propertyOverrides != null) {
             jndiProperties.putAll(propertyOverrides);
         }

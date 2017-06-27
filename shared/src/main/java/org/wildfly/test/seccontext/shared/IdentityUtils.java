@@ -7,6 +7,7 @@ import org.wildfly.security.auth.client.AuthenticationContext;
 import org.wildfly.security.auth.client.MatchRule;
 import org.wildfly.security.auth.server.SecurityDomain;
 import org.wildfly.security.evidence.PasswordGuessEvidence;
+import org.wildfly.security.sasl.SaslMechanismSelector;
 
 public class IdentityUtils {
 
@@ -14,14 +15,12 @@ public class IdentityUtils {
             ReAuthnType type) throws Exception {
         switch (type) {
             case FORWARDED_IDENTITY:
-                return AuthenticationContext.empty()
-                        .with(MatchRule.ALL,
-                                AuthenticationConfiguration.empty().useForwardedIdentity(SecurityDomain.getCurrent()))
+                return AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty()
+                        .useForwardedIdentity(SecurityDomain.getCurrent()).setSaslMechanismSelector(SaslMechanismSelector.ALL))
                         .runCallable(callable);
             case AUTHENTICATION_CONTEXT:
-                return AuthenticationContext.empty()
-                        .with(MatchRule.ALL, AuthenticationConfiguration.empty().useName(username).usePassword(password))
-                        .runCallable(callable);
+                return AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty().useName(username)
+                        .usePassword(password).setSaslMechanismSelector(SaslMechanismSelector.ALL)).runCallable(callable);
             case SECURITY_DOMAIN_AUTHENTICATE:
                 return SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
                         .runAs(callable);
