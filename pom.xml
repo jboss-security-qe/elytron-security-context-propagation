@@ -28,16 +28,6 @@
 
     <dependencyManagement>
         <dependencies>
-<!-- 
-            <dependency>
-                <groupId>org.jboss.bom</groupId>
-                <artifactId>eap-runtime-artifacts</artifactId>
-                <version>7.1.0.Beta1</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
- -->
-             
             <dependency>
                 <groupId>org.wildfly.security</groupId>
                 <artifactId>wildfly-elytron</artifactId>

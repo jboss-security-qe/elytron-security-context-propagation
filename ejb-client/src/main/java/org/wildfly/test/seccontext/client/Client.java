@@ -1,10 +1,7 @@
 package org.wildfly.test.seccontext.client;
 
 import java.util.Arrays;
-import java.util.Properties;
 import java.util.concurrent.Callable;
-
-import javax.naming.Context;
 
 import org.wildfly.security.auth.client.AuthenticationConfiguration;
 import org.wildfly.security.auth.client.AuthenticationContext;
@@ -31,15 +28,9 @@ public class Client {
             return null;
         };
 
-        AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty().useName("entry")
-                .usePassword("entry").setSaslMechanismSelector(SaslMechanismSelector.ALL)).runCallable(callable);
-    }
-
-    public static Properties getCtxProperties() {
-        Properties props = new Properties();
-        props.put(Context.INITIAL_CONTEXT_FACTORY, Constants.INITIAL_CTX_FACTORY);
-        props.put(Context.PROVIDER_URL, Constants.INITIAL_CTX_FACTORY);
-        return props;
+        AuthenticationContext authnCtx = AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty().useName("entry")
+                .usePassword("entry").setSaslMechanismSelector(SaslMechanismSelector.ALL));
+        authnCtx.runCallable(callable);
     }
 
 }
