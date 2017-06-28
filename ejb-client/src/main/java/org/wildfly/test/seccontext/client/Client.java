@@ -21,7 +21,9 @@ public class Client {
         Callable<Void> callable = () -> {
             final Entry bean = LookupUtil.lookup(BEAN_REMOTE_NAME, null);
             System.out.println("WhoAmI: " + bean.whoAmI());
-            for (ReAuthnType type : ReAuthnType.values()) {
+            ReAuthnType type = ReAuthnType.AUTHENTICATION_CONTEXT;
+//            for (ReAuthnType type : ReAuthnType.values())
+            {
                 System.out.println("DoubleWhoAmI (noCreds) " + type + ": " + Arrays.toString(bean.doubleWhoAmI(null, null, type)));
                 System.out.println("DoubleWhoAmI (creds) " + type + ": " + Arrays.toString(bean.doubleWhoAmI("whoami", "whoami", type)));
             }
