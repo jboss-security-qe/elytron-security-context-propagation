@@ -23,7 +23,7 @@
         <module>ejb-client</module>
         <module>ejb-entrybean</module>
         <module>ejb-whoamibean</module>
-        <module>servlet</module>
+        <module>web</module>
     </modules>
 
     <dependencyManagement>

@@ -8,7 +8,7 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>shared</artifactId>
+    <artifactId>seccontext-shared</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
