@@ -13,6 +13,9 @@ public class IdentityUtils {
 
     public static <T> T switchIdentity(final String username, final String password, final Callable<T> callable,
             ReAuthnType type) throws Exception {
+        if (type==null) {
+            type = ReAuthnType.AUTHENTICATION_CONTEXT;
+        }
         switch (type) {
             case FORWARDED_IDENTITY:
                 return AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty()

@@ -11,6 +11,8 @@ import javax.annotation.security.DeclareRoles;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
 import javax.naming.NamingException;
 
 import org.wildfly.test.seccontext.shared.Constants;
@@ -22,6 +24,7 @@ import org.wildfly.test.seccontext.shared.WhoAmI;
 @Stateless
 @RolesAllowed("entry")
 @DeclareRoles({ "entry", "whoami", "servlet" })
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class EntryBean implements Entry {
 
     public static final String BEAN_REMOTE_NAME = System.getProperty(Constants.PROP_BEAN_LOOKUP_WHOAMI,

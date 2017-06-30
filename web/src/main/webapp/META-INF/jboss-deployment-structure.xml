@@ -1,7 +1,9 @@
 <jboss-deployment-structure>
     <deployment>
         <dependencies>
+<!-- 
             <module name="deployment.seccontext-entry.jar"/>
+ -->
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
