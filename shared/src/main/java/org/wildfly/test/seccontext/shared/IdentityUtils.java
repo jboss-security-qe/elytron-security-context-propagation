@@ -13,7 +13,7 @@ public class IdentityUtils {
 
     public static <T> T switchIdentity(final String username, final String password, final Callable<T> callable,
             ReAuthnType type) throws Exception {
-        if (type==null) {
+        if (type == null) {
             type = ReAuthnType.AUTHENTICATION_CONTEXT;
         }
         switch (type) {
@@ -22,11 +22,19 @@ public class IdentityUtils {
                         .useForwardedIdentity(SecurityDomain.getCurrent()).setSaslMechanismSelector(SaslMechanismSelector.ALL))
                         .runCallable(callable);
             case AUTHENTICATION_CONTEXT:
-                return AuthenticationContext.empty().with(MatchRule.ALL, AuthenticationConfiguration.empty().useName(username)
-                        .usePassword(password).setSaslMechanismSelector(SaslMechanismSelector.ALL)).runCallable(callable);
+                AuthenticationConfiguration authCfg = AuthenticationConfiguration.empty()
+                        .setSaslMechanismSelector(SaslMechanismSelector.ALL);
+                if (username != null) {
+                    authCfg = authCfg.useName(username);
+                }
+                if (password != null) {
+                    authCfg = authCfg.usePassword(password);
+                }
+                return AuthenticationContext.empty().with(MatchRule.ALL, authCfg).runCallable(callable);
             case SECURITY_DOMAIN_AUTHENTICATE:
-                return SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
-                        .runAs(callable);
+                return password == null ? null
+                        : SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
+                                .runAs(callable);
             case NO_REAUTHN:
             default:
                 return callable.call();

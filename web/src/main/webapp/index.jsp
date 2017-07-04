@@ -50,17 +50,24 @@
     <div class="container">
 
       <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
+        <h1>Security context propagation test</h1>
+        <p class="lead">Use this app to test behavior between servers.</p>
       </div>
 
+<h2>Call the Entry bean</h2>
 <c:set var="enumValues" value="<%=org.wildfly.test.seccontext.shared.ReAuthnType.values()%>"/>
       
 <form class="form-horizontal" action="<c:url value='/CallEntryServlet'/>" method="get">
   <fieldset>
-    <legend>InjectedEntryServlet</legend>
+    <legend>Bean call configuration</legend>
     <div class="form-group">
-      <label for="method" class="col-lg-2 control-label">Method</label>
+      <label for="url" class="col-lg-2 control-label">Server1 URL</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="url" placeholder="Url" name="url" value="remote+http://127.0.0.1:8080">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="method" class="col-lg-2 control-label">Entry bean method</label>
       <div class="col-lg-10">
         <select class="form-control" id="method" name="method">
           <option>whoAmI</option>
@@ -71,19 +78,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="username" class="col-lg-2 control-label">Username</label>
-      <div class="col-lg-10">
-        <input type="text" class="form-control" id="username" placeholder="Username" name="username">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="password" class="col-lg-2 control-label">Password</label>
-      <div class="col-lg-10">
-        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="role" class="col-lg-2 control-label">Role</label>
+      <label for="role" class="col-lg-2 control-label">Role to check (for do*IHaveRole methods)</label>
       <div class="col-lg-10">
         <select class="form-control" id="role" name="role">
           <option>entry</option>
@@ -92,8 +87,11 @@
         </select>
       </div>
     </div>
+  </fieldset>
+  <fieldset>
+  	<legend>Switch identity in servlet</legend>
     <div class="form-group">
-      <label for="type" class="col-lg-2 control-label">Re-auth type</label>
+      <label for="type" class="col-lg-2 control-label">Switch identity type</label>
       <div class="col-lg-10">
         <select class="form-control" id="type" name="type">
         <c:forEach items="${enumValues}" var="enumValue">
@@ -103,25 +101,22 @@
       </div>
     </div>
     <div class="form-group">
-      <label for="url" class="col-lg-2 control-label">Provider url</label>
+      <label for="username" class="col-lg-2 control-label">Entry bean username</label>
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="url" placeholder="Url" name="url" value="remote+http://127.0.0.1:8080">
+        <input type="text" class="form-control" id="username" placeholder="Username" name="username">
       </div>
     </div>
     <div class="form-group">
-      <label for="username2" class="col-lg-2 control-label">Username2</label>
+      <label for="password" class="col-lg-2 control-label">Entry bean password</label>
       <div class="col-lg-10">
-        <input type="text" class="form-control" id="username2" placeholder="Username" name="username2">
+        <input type="password" class="form-control" id="password" placeholder="Password" name="password">
       </div>
     </div>
+  </fieldset>
+  <fieldset>
+  	<legend>Switch identity in Entry bean (only valid for double* methods)</legend>
     <div class="form-group">
-      <label for="password2" class="col-lg-2 control-label">Password2</label>
-      <div class="col-lg-10">
-        <input type="password" class="form-control" id="password2" placeholder="Password" name="password2">
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="type2" class="col-lg-2 control-label">Re-auth type2</label>
+      <label for="type2" class="col-lg-2 control-label">Switch identity type</label>
       <div class="col-lg-10">
         <select class="form-control" id="type2" name="type2">
         <c:forEach items="${enumValues}" var="enumValue">
@@ -130,13 +125,25 @@
         </select>
       </div>
     </div>
+    <div class="form-group">
+      <label for="username2" class="col-lg-2 control-label">WhoAmI bean username</label>
+      <div class="col-lg-10">
+        <input type="text" class="form-control" id="username2" placeholder="Username" name="username2">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="password2" class="col-lg-2 control-label">WhoAmI bean password</label>
+      <div class="col-lg-10">
+        <input type="password" class="form-control" id="password2" placeholder="Password" name="password2">
+      </div>
+    </div>
+  </fieldset>
     
     <div class="form-group">
       <div class="col-lg-10 col-lg-offset-2">
         <button type="submit" class="btn btn-primary">Submit</button>
       </div>
     </div>
-  </fieldset>
 </form>
     </div><!-- /.container -->
 

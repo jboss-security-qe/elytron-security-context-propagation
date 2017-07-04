@@ -11,7 +11,7 @@
 
     <properties>
         <version.org.wildfly>11.0.0.Beta1-SNAPSHOT</version.org.wildfly>
-        <version.org.wildfly.security.elytron>1.1.0.Beta54</version.org.wildfly.security.elytron>
+        <version.org.wildfly.security.elytron>1.1.0.CR2</version.org.wildfly.security.elytron>
         <!-- Workaround for JBEAP-10893 - should be an Elytron transitive dep -->
         <version.org.wildfly.common>1.2.0.CR1</version.org.wildfly.common>
 
