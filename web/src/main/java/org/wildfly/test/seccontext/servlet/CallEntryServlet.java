@@ -25,8 +25,8 @@ import org.wildfly.test.seccontext.shared.LookupUtil;
 import org.wildfly.test.seccontext.shared.ReAuthnType;
 
 @WebServlet(urlPatterns = "/CallEntryServlet")
-@ServletSecurity(@HttpConstraint(rolesAllowed = { "servlet" }))
-@DeclareRoles({ "entry", "whoami", "servlet" })
+@ServletSecurity(@HttpConstraint(rolesAllowed = { "servlet", "admin" }))
+@DeclareRoles({ "entry", "whoami", "servlet", "admin" })
 public class CallEntryServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;

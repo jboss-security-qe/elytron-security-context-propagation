@@ -35,6 +35,17 @@ public class IdentityUtils {
                 return password == null ? null
                         : SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
                                 .runAs(callable);
+            case SECURITY_DOMAIN_AUTHENTICATE_FORWARDED:
+                final Callable<T> forwardIdentityCallable = () -> {
+                    return AuthenticationContext.empty()
+                            .with(MatchRule.ALL,
+                                    AuthenticationConfiguration.empty().useForwardedIdentity(SecurityDomain.getCurrent())
+                                            .setSaslMechanismSelector(SaslMechanismSelector.ALL))
+                            .runCallable(callable);
+                };
+                return password == null ? null
+                        : SecurityDomain.getCurrent().authenticate(username, new PasswordGuessEvidence(password.toCharArray()))
+                                .runAs(forwardIdentityCallable);
             case NO_REAUTHN:
             default:
                 return callable.call();

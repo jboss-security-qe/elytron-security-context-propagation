@@ -70,4 +70,8 @@ embed-server --admin-only=true
 /subsystem=elytron/filesystem-realm=SeccontextFsRealm:set-password(identity=whoami, clear={password=whoami})
 /subsystem=elytron/filesystem-realm=SeccontextFsRealm:add-identity-attribute(identity=whoami, name=groups, value=["whoami"])
 
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm:add-identity(identity=admin)
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm:set-password(identity=admin, clear={password=admin})
+/subsystem=elytron/filesystem-realm=SeccontextFsRealm:add-identity-attribute(identity=admin, name=groups, value=["admin"])
+
 stop-embedded-server

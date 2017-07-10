@@ -22,8 +22,8 @@ import org.wildfly.test.seccontext.shared.ReAuthnType;
 import org.wildfly.test.seccontext.shared.WhoAmI;
 
 @Stateless
-@RolesAllowed("entry")
-@DeclareRoles({ "entry", "whoami", "servlet" })
+@RolesAllowed({ "entry", "admin" })
+@DeclareRoles({ "entry", "whoami", "servlet", "admin" })
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class EntryBean implements Entry {
 

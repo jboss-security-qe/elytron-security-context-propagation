@@ -11,8 +11,8 @@ import javax.ejb.Stateless;
 import org.wildfly.test.seccontext.shared.WhoAmI;
 
 @Stateless
-@RolesAllowed("whoami")
-@DeclareRoles({ "entry", "whoami", "servlet" })
+@RolesAllowed({ "whoami", "admin" })
+@DeclareRoles({ "entry", "whoami", "servlet", "admin" })
 public class WhoAmIBean implements WhoAmI {
 
     @Resource

@@ -20,5 +20,5 @@ $JBOSS_HOME/bin/standalone.sh -c standalone.xml -Djboss.server.base.dir=$JBOSS_H
 $JBOSS_HOME/bin/standalone.sh -c standalone.xml -Djboss.server.base.dir=$JBOSS_HOME/standalone2 -Djboss.node.name=host2 -Djboss.socket.binding.port-offset=200
 
 # run the client
-mvn exec:java -f ejb-client
+mvn exec:java -f ejb-client/pom.xml
 ```
