@@ -1,6 +1,4 @@
-# Elytron Security context propagation
-
-Playground for security context propagation testing in Elytron
+# JBEAP-12034 reproducer
 
 ```
 # set path to WildFly/EAP
